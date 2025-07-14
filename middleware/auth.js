@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 
-// Middleware to check if user is authenticated
 const requireAuth = (req, res, next) => {
     const token = req.cookies.jwt;
 
@@ -20,23 +19,34 @@ const requireAuth = (req, res, next) => {
     }
 };
 
-// Middleware to check if user has specific role
-const requireRole = (roles) => {
+function requireRole(allowedRoles) {
     return (req, res, next) => {
         if (!req.user) {
             return res.redirect('/login');
         }
-
-        // Check if user's role is in the allowed roles array
-        if (roles.includes(req.user.role)) {
-            next();
-        } else {
-            res.status(403).render('error', {
-                message: 'Access denied. You do not have permission to access this page.',
-                user: req.user
-            });
+        // allowedRoles เป็น array ของชื่อ role เช่น ['admin', 'warehouse']
+        // ต้องแปลง role_id เป็นชื่อ role ก่อน
+        const roleMap = { 1: 'admin', 2: 'owner', 3: 'cashier', 4: 'warehouse', 5: 'delivery' };
+        const userRoleName = roleMap[req.user.role_id];
+        if (!allowedRoles.includes(userRoleName)) {
+            return res.status(403).render('error', { message: 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้' });
         }
+        next();
     };
+}
+
+const redirectIfAuthenticated = (req, res, next) => {
+    const token = req.cookies.jwt;
+    if (token) {
+        jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+            if (!err && decodedToken) {
+                return res.redirect('/dashboard');
+            }
+            next();
+        });
+    } else {
+        next();
+    }
 };
 
-module.exports = { requireAuth, requireRole }; 
+module.exports = { requireAuth, requireRole, redirectIfAuthenticated };

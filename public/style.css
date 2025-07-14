@@ -1,28 +1,123 @@
 nav {
-    background-color: rgb(0, 4, 255);
-    color: #fff;
-    padding: 30px 60px;
+    background-color: #2563eb;
+    color: #000000;
+    padding: 0.1rem 1rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 0.97rem;
 }
 
 nav ul {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
 }
 
 nav li {
-    list-style: none;   
+    list-style: none;
 }
 
 nav li a {
     color: #fff;
     text-decoration: none;
-    font-weight: bold;
-    padding: 5px 8px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    font-size: 0.97rem;
 }
 
 nav li a:hover {
-    color: #000;
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+/* Responsive navigation */
+@media (max-width: 768px) {
+    nav {
+        padding: 0.05rem 0.5rem;
+        font-size: 0.93rem;
+    }
+    nav ul {
+        gap: 0.5rem;
+    }
+    nav li a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.93rem;
+    }
+}
+
+body { background: #ffffff; }
+.sidebar {
+    background: #fff;
+    min-height: 100vh;
+    border-right: 1px solid #e5e7eb;
+    padding: 2rem 1rem 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.sidebar .nav {
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.sidebar .nav-link {
+    color: #2563eb;
+    font-weight: 500;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    transition: background 0.2s, color 0.2s;
+    margin-bottom: 0.2rem;
+}
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    background: #e7f1ff;
+    color: #2563eb;
+}
+
+/* Responsive: sidebar collapses on small screens */
+@media (max-width: 991px) {
+    .sidebar {
+        min-height: auto;
+        padding: 1rem 0.5rem;
+    }
+    .sidebar .nav-link {
+        padding: 0.6rem 0.7rem;
+        font-size: 0.97rem;
+    }
+}
+
+.stat-card {
+    border-radius: 1rem;
+    box-shadow: 0 2px 12px rgba(30,64,175,0.07);
+    background: #fff;
+    margin-bottom: 1.5rem;
+}
+.stat-card .icon {
+    font-size: 2.2rem;
+    color: #2563eb;
+    margin-bottom: 0.5rem;
+}
+.stat-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.stat-card .card-text {
+    font-size: 2rem;
+    font-weight: 700;
+}
+.table thead {
+    background: #e7f1ff;
+}
+.footer {
+    background: #f1f5f9;
+    color: #888;
 }

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แดชบอร์ด | ระบบคลังสินค้า</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 d-none d-md-block sidebar py-4">
+                <h4 class="text-center mb-4">ระบบคลังสินค้า</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a href="/dashboard" class="nav-link active">
+                            <i class="fas fa-tachometer-alt me-2"></i> แดชบอร์ด
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="/inventory" class="nav-link">
+                            <i class="fas fa-boxes me-2"></i> คลังสินค้า
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="/orders" class="nav-link">
+                            <i class="fas fa-shopping-cart me-2"></i> ออเดอร์
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="/suppliers" class="nav-link">
+                            <i class="fas fa-truck me-2"></i> ซัพพลายเออร์
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="/reports" class="nav-link">
+                            <i class="fas fa-chart-bar me-2"></i> รายงาน
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- Main Content -->
+            <main class="col-md-10 ms-sm-auto px-4 py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">ภาพรวมแดชบอร์ด</h2>
+                    <a href="/logout" class="btn btn-danger"><i class="fas fa-sign-out-alt me-1"></i> ออกจากระบบ</a>
+                </div>
+                <!-- Stat Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-lg-3">
+                        <div class="card stat-card text-center p-3">
+                            <div class="icon"><i class="fas fa-box"></i></div>
+                            <div class="card-title">สินค้าทั้งหมด</div>
+                            <div class="card-text">1,234</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <div class="card stat-card text-center p-3">
+                            <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+                            <div class="card-title">ออเดอร์ที่รอดำเนินการ</div>
+                            <div class="card-text">45</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <div class="card stat-card text-center p-3">
+                            <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="card-title">สินค้าใกล้หมด</div>
+                            <div class="card-text">12</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <div class="card stat-card text-center p-3">
+                            <div class="icon"><i class="fas fa-coins"></i></div>
+                            <div class="card-title">มูลค่ารวม</div>
+                            <div class="card-text">฿45,678</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recent Orders Table -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">ออเดอร์ล่าสุด</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>รหัสออเดอร์</th>
+                                        <th>ลูกค้า</th>
+                                        <th>วันที่</th>
+                                        <th>สถานะ</th>
+                                        <th>ยอดรวม</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#12345</td>
+                                        <td>John Doe</td>
+                                        <td>2024-02-20</td>
+                                        <td><span class="badge bg-success">เสร็จสิ้น</span></td>
+                                        <td>฿1,234</td>
+                                    </tr>
+                                    <tr>
+                                        <td>#12346</td>
+                                        <td>Jane Smith</td>
+                                        <td>2024-02-20</td>
+                                        <td><span class="badge bg-warning text-dark">รอดำเนินการ</span></td>
+                                        <td>฿567</td>
+                                    </tr>
+                                    <tr>
+                                        <td>#12347</td>
+                                        <td>Mike Johnson</td>
+                                        <td>2024-02-19</td>
+                                        <td><span class="badge bg-info text-dark">กำลังดำเนินการ</span></td>
+                                        <td>฿890</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Low Stock Alert -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0">สินค้าใกล้หมด</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>รหัสสินค้า</th>
+                                        <th>ชื่อสินค้า</th>
+                                        <th>คงเหลือ</th>
+                                        <th>จุดสั่งซื้อใหม่</th>
+                                        <th>การกระทำ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>P001</td>
+                                        <td>โน้ตบุ๊ก</td>
+                                        <td>5</td>
+                                        <td>10</td>
+                                        <td><button class="btn btn-sm btn-primary">สั่งซื้อใหม่</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>P002</td>
+                                        <td>เมาส์</td>
+                                        <td>8</td>
+                                        <td>15</td>
+                                        <td><button class="btn btn-sm btn-primary">สั่งซื้อใหม่</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

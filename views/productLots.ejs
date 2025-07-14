@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>รายการล็อตสินค้า</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-9">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+          <i class="fas fa-list me-2"></i>
+          <h5 class="mb-0">รายการล็อตสินค้า (สินค้า ID: <%= product_id %>)</h5>
+        </div>
+        <div class="card-body">
+          <a href="/products/<%= product_id %>/lots/add" class="btn btn-success mb-3">เพิ่มล็อตสินค้าใหม่</a>
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th>หมายเลขล็อต</th>
+                  <th>ล็อตที่</th>
+                  <th>วันที่เข้า</th>
+                  <th>วันหมดอายุ</th>
+                  <th>จำนวน</th>
+                  <th>ราคาต้นทุน</th>
+                  <th>ราคาขาย</th>
+                  <th>ราคาโปรโมชั่น</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% lots.forEach(function(lot) { %>
+                  <tr>
+                    <td><%= lot.lot_number %></td>
+                    <td><%= lot.lot_index %></td>
+                    <td><%= lot.import_date.toISOString().slice(0,10) %></td>
+                    <td><%= lot.expire_date.toISOString().slice(0,10) %></td>
+                    <td><%= lot.quantity %></td>
+                    <td><%= lot.cost_price %></td>
+                    <td><%= lot.sell_price %></td>
+                    <td><%= lot.promo_price %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-end">
+            <a href="/inventory" class="btn btn-secondary">กลับหน้ารายการสินค้า</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

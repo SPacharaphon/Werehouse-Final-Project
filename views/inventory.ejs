@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คลังสินค้า | ระบบคลังสินค้า</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 d-none d-md-block sidebar py-4 bg-light border-end min-vh-100">
+                <h4 class="text-center mb-4">ระบบคลังสินค้า</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a href="/dashboard" class="nav-link">
+                            <i class="fas fa-tachometer-alt me-2"></i> แดชบอร์ด
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="/inventory" class="nav-link active">
+                            <i class="fas fa-boxes me-2"></i> คลังสินค้า
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="/orders" class="nav-link">
+                            <i class="fas fa-shopping-cart me-2"></i> ออเดอร์
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="/suppliers" class="nav-link">
+                            <i class="fas fa-truck me-2"></i> ซัพพลายเออร์
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="/reports" class="nav-link">
+                            <i class="fas fa-chart-bar me-2"></i> รายงาน
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- Main Content -->
+            <main class="col-md-10 ms-sm-auto px-4 py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0"><i class="fas fa-boxes me-2"></i>คลังสินค้า</h2>
+                    <div>
+                        <a href="/inventory/add" class="btn btn-success me-2"><i class="fas fa-plus me-1"></i> เพิ่มสินค้า</a>
+                        <a href="/logout" class="btn btn-danger"><i class="fas fa-sign-out-alt me-1"></i> ออกจากระบบ</a>
+                    </div>
+                </div>
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                        <div>
+                            <i class="fas fa-list me-2"></i>
+                            <h5 class="mb-0 d-inline">รายการสินค้าในคลัง</h5>
+                        </div>
+                        <form class="d-flex" method="get" action="/inventory">
+                            <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="ค้นหาสินค้า..." value="<%= typeof search !== 'undefined' ? search : '' %>" aria-label="ค้นหา" style="width: 200px;">
+                            <button class="btn btn-outline-light btn-sm" type="submit"><i class="fas fa-search"></i></button>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <% if (typeof search !== 'undefined' && search) { %>
+                            <div class="mb-2 text-muted">ผลการค้นหาสำหรับ: <strong><%= search %></strong></div>
+                        <% } %>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>รหัสสินค้า</th>
+                                        <th>ชื่อสินค้า</th>
+                                        <th>หมวดหมู่</th>
+                                        <th>คงเหลือ</th>
+                                        <th>ราคา/หน่วย</th>
+                                        <th> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (products && products.length > 0) { %>
+                                        <% products.forEach(function(product) { %>
+                                            <tr>
+                                                <td><%= product.code %></td>
+                                                <td><%= product.name %></td>
+                                                <td><%= product.category %></td>
+                                                <td><%= lotsMap[product.id]?.total_quantity ?? '-' %></td>
+                                                <td><%= lotsMap[product.id]?.latest_sell_price ? '฿' + lotsMap[product.id].latest_sell_price : '-' %></td>
+                                                <td>
+                                                    <a href="/products/<%= product.id %>/lots" class="btn btn-primary btn-sm mb-1">ดูล็อต</a>
+                                                    <a href="/products/<%= product.id %>/lots/add" class="btn btn-warning btn-sm mb-1 ms-1">เพิ่มล็อต</a>
+                                                    <a href="/inventory/edit/<%= product.code %>" class="btn btn-outline-warning btn-sm mb-1 ms-1"><i class="fas fa-edit"></i></a>
+                                                    <a href="/inventory/delete/<%= product.code %>" class="btn btn-outline-danger btn-sm mb-1 ms-1"><i class="fas fa-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    <% } else { %>
+                                        <tr><td colspan="7" class="text-center">ไม่มีข้อมูลสินค้า</td></tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

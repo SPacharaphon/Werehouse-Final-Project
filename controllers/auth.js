@@ -1,82 +1,42 @@
-const mysql = require('mysql');
+const userModel = require('../models/userModel');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const bcryt = require('bcryptjs');
 
-// Ensure JWT_SECRET is available
 if (!process.env.JWT_SECRET) {
     console.error('JWT_SECRET is not set in environment variables');
     process.env.JWT_SECRET = 'default_secret_key_for_development_only';
 }
 
-const db = mysql.createConnection({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE
-});
-
 exports.register = (req, res) => {
-    console.log(req.body);
-
     const { name, username, password, passwordConfirm, role } = req.body;
+    const roleMap = { owner: 2, admin: 1, cashier: 3, warehouse: 4, delivery: 5 };
+    const role_id = roleMap[role];
 
-    // Validate role
-    const validRoles = ['owner', 'admin', 'cashier', 'warehouse', 'delivery'];
-    if (!validRoles.includes(role)) {
-        return res.render('register', {
-            message: 'Invalid role selected'
-        });
+    if (!role_id) {
+        return res.json({ success: false, message: 'Invalid role selected' });
     }
 
-    db.query('SELECT username FROM users WHERE username = ?', [username], async (error, result) => {
-        if (error) {
-            console.log(error);
-            return res.render('register', {
-                message: 'An error occurred during registration'
-            });
-        }
+    userModel.findByUsername(username, async (error, result) => {
+        if (error) return res.json({ success: false, message: 'DB error' });
+        if (result.length > 0) return res.json({ success: false, message: 'Username already in use' });
+        if (password !== passwordConfirm) return res.json({ success: false, message: 'Passwords do not match' });
 
-        if (result.length > 0) {
-            return res.render('register', {
-                message: 'That username is already in use'
-            });
-        } else if (password !== passwordConfirm) {
-            return res.render('register', {
-                message: 'Passwords do not match'
-            });
-        }
-
-        let hashedPassword = await bcryt.hash(password, 8);
-        console.log(hashedPassword);
-        {
-            db.query('INSERT INTO users SET ?', { 
-                name: name, 
-                username: username, 
-                password: hashedPassword,
-                role: role 
-            }, (err, result) => {
-                if (err) {
-                    console.log(err);
-                    return res.render('register', {
-                        message: 'An error occurred during registration'
-                    });
-                } else {
-                    console.log(result);
-                    return res.render('register', {
-                        message: 'User registered successfully'
-                    })
-                }
-            })
-        }
-    })
-}
+        const hashedPassword = await bcrypt.hash(password, 8);
+        userModel.createUser({ name, username, password: hashedPassword, role_id }, (err, result) => {
+            if (err) {
+                console.error('Create user error:', err);
+                return res.json({ success: false, message: 'DB error' });
+            }
+            return res.json({ success: true, message: 'User registered successfully' });
+        });
+    });
+};
 
 exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        // Check if user exists
-        db.query('SELECT * FROM users WHERE username = ?', [username], async (error, results) => {
+        userModel.findByUsername(username, async (error, results) => {
             if (error) {
                 console.log(error);
                 return res.render('login', {
@@ -90,8 +50,7 @@ exports.login = async (req, res) => {
                 });
             }
 
-            // Compare password
-            const isMatch = await bcryt.compare(password, results[0].password);
+            const isMatch = await bcrypt.compare(password, results[0].password);
             if (!isMatch) {
                 return res.render('login', {
                     message: 'Invalid username or password'
@@ -99,22 +58,20 @@ exports.login = async (req, res) => {
             }
 
             try {
-                // Create JWT token with role information
                 const token = jwt.sign(
                     { 
                         id: results[0].id, 
                         username: results[0].username,
-                        role: results[0].role,
+                        role_id: results[0].role_id,
                         name: results[0].name
                     },
                     process.env.JWT_SECRET,
                     { expiresIn: '1h' }
                 );
 
-                // Set cookie
                 res.cookie('jwt', token, {
                     httpOnly: true,
-                    maxAge: 3600000 // 1 hour
+                    maxAge: 3600000 
                 });
 
                 return res.redirect('/dashboard');
